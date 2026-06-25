@@ -84,3 +84,11 @@ xor rdi,rdi
 syscall
 ;mode kernel
 ;execute exit(0)b
+
+;:::::::::::: Tous les arguments du syscall :::::::::::::
+;arg 1: rdi
+;arg 2: rsi
+;arg 3: rdx
+;arg 4: r10
+;arg 5: r8
+;arg 6: r9
