@@ -111,6 +111,8 @@ xor rdi,rdi
 syscall
 
 ;NB: la compilation se fait en mode PIE par le système
+;PIE: Position Independant Executable
+
 ;donc il faut désactiver le mode PIE lors de la compilation
 ;---------
 ;Cas 1:
