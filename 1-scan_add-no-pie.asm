@@ -2,10 +2,10 @@
 
 ;// Les données initialisés
 section .data
-msg1 db "Entrer la première valeur:"
+msg1 db "Saisir le premier nombre:"
 len1 equ $ - msg1
 
-msg2 db "Entrer la deuxième valeur:"
+msg2 db "Saisir le second nombre:"
 len2 equ $ - msg2
 
 msg3 db "Le résultat est:",
@@ -123,4 +123,4 @@ syscall
 ;---------
 ;ld input.o -o output
 
-;Code PIC-compatible dans scan_add_pic.asm
+;Code PIC-compatible dans scan_add_pic.asm (méthode moderne)
