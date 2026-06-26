@@ -74,9 +74,12 @@ add al, cl
 ;Conversion du résultat
 add al, '0'
 lea rbx, [rel result]
+;rbx devient l'adresse de result
 mov byte [rbx], al
+;ecrire la valeur de al (resultat) à cette adresse
 mov byte [rbx + 1], 10
-;saut de ligne dans le buffer
+;ecrire le saut de ligne dans le buffer
+;10 saut de ligne
 
 
 ;afficher le résultat
