@@ -1,69 +1,45 @@
-;//constantes
 section .data
-;section .data: correspondant aux données initialisés
-msg db "Le résultat est:",0
-;caractère de fin \0
-;comme une chaine C
+msg db "Affichage: ",0
 msg_len equ $ - msg
-  
-;//reservations
+newline db 10
+;10: saut de ligne
+
 section .bss
-;section .bss: correspondant aux données non initialisés
-;zone pour la mémoire vide réservé
 buffer resb 16
-;reservation de 16octets = 16 * 8bits
-;pourquoi 16octets ?
-;il faut trouver le nombre confort
-;reservation de mémoire très petit === bufferoverflow
-;reservation de mémoire trop grand === gaspillage de mémoire
 
 section .text
 global _start
 _start:
-
-;//opérations
-mov eax,3400
-add eax,50
+mov eax, 2400
+add eax, 50
 ;addition de 3400 + 50
 ;eax est une registre sur 32bits (pourquoi eax et non rax ? pour éviter le gespillage)
 
-;//sauvegarde
 mov ebx,eax
 ;copie du résultat dans ebx
 ;pourquoi ?
 ;on libère le registre eax pour effectuer d'autres opérations
 ;alors on garde une copie du résultat
 
-;//initialisation du buffer
+;// 2 - initialisation du buffer
 mov rdi, buffer + 15
-;on se place à la fin du buffer car on va écrire le nombre de droite à gauche
-mov byte [rdi],0
-;on met une caractère de fin \0
-;comme une chaine C
-
+;on se place à la fin du buffer
+mov byte [rdi], 10
+;écriture du caractère de fin '\10': saut de ligne
 dec rdi
-;on récule d'une case pour commencer à écrire le nombre, car buffer + 15 est réservé pour le caractère \0
-;donc on commence à écrire à partir de buffer + 14
+;on récule d'une case pour commencer à écrire
 
-;//Conversion en ASCII
-;pour afficher les nombres à l'écran, il est nécessaire de convertir les caractères en ASCII ou en UTF-8
-;car les valeurs sont stockées en binaire initialement
-;Donc pour une sortie standart, il est impératif de faire la conversion
-;NB: Pour une affichage dans un mode graphique (GPU, framebuffer), la conversion n'est pas nécessaire
-;car on peut écrire directement sur les pixels
-
-mov eax,ebx
-;on remet le résultat dans le registre eax
-mov ecx,10
-;base décimal = 10
-;ecx ne sert que de diviseur, on ne l'utilise pas comme pointer
+;// 3 - On boucle l'écriture
+mov eax, ebx
+;on récupere la valeur
+mov rcx, 10
 
 ;//Boucle
 convert_loop:
-xor edx,edx
-;remise à 0 de edx;
-
+xor edx, edx
+;remise à 0 de edx (pour la division)
 div ecx
+;division de eax par ecx (eax: registre implicite)
 ;Division eax par ecx (eax/10)
 ;quotion eax
 ;reste edx
@@ -106,8 +82,8 @@ add dl, '0'
 ;Les 128 premiers caractères ASCII sont identiques à celui d'UTF-8
 
 mov [rdi], dl
-;utilisation de ecx comme adresse; c'est pourquoi on utilise les crochets: acceder à une mémoire
-;Exemple: ecx = 0x100E, dl = '0'
+;utilisation de rdi comme adresse; c'est pourquoi on utilise les crochets: acceder à une mémoire
+;Exemple: rdi = 0x100E, dl = '0'
 ;Ox100A '0'
 
 dec rdi
@@ -191,6 +167,13 @@ mov rdx, buffer + 15 ;fin
 sub rdx, rsi
 ;Ex: rsi = buffer + 11
 ;buffer + 15 - buffer + 11 = 4 caractères
+syscall
+
+;//saut de ligne
+mov rax,1
+mov rdi,1
+lea rsi, [rel newline]
+mov rdx,1
 syscall
 
 ;retour systeme
